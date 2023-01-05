@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,20 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'StoreController@home');
+Auth::routes();
 
-Route::get('/search', function () {
-    return view('search');
-});
+Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
-Route::get('/history', function () {
-    return view('history');
-});
-
-Route::get('/profile', function () {
-    return view('user');
-});
-
-Route::get('/cart', function () {
-    return view('cart');
+Route::group(['middleware' => 'auth'], function(){
+    Route::get('/home', [StoreController::class, 'home']);
+    Route::get('/search', [StoreController::class, 'search']);
+    Route::get('/history', [StoreController::class, 'history']);
+    Route::get('/profile', [StoreController::class, 'user']);
+    Route::get('/cart', [StoreController::class, 'cart']);
+    Route::get('/create', [StoreController::class, 'create']);
+    Route::post('/store', [StoreController::class, 'store']);
 });
